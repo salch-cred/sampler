@@ -1,0 +1,32 @@
+name: sampler
+version: 0.1.0
+manifest_version: 2
+api_version: 1
+description: >-
+  Set temperature and top_p for your agent: a default, rules per platform, model or provider
+  (for example low temperature for coding models, higher for chat on Telegram), and a per-session
+  override with /sampler. Works through Hermes' llm_request middleware on OpenAI-compatible,
+  Anthropic and Bedrock requests. Models Hermes itself sends without a temperature, such as
+  reasoning models, are never changed. No model calls, no network, no state on disk.
+author: salch-cred
+license: MIT
+homepage: https://github.com/salch-cred/sampler
+tags: [models, sampling, temperature, configuration, middleware]
+requires_hermes: ">=0.23"
+
+provides_middleware:
+  - llm_request
+
+config_schema:
+  temperature:
+    type: str
+    default: ""
+    description: Default temperature from 0 to 2 for every request. Empty leaves the provider default.
+  top_p:
+    type: str
+    default: ""
+    description: Default top_p from 0 to 1. Empty leaves the provider default.
+  rules:
+    type: str
+    default: ""
+    description: Comma-separated rules such as "platform:telegram=0.8, model:*coder*=0.1". The first match wins.
